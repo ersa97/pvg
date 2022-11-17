@@ -8,9 +8,17 @@ import (
 	"pvg/models"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
+func init() {
+	errLoadingEnvFile := godotenv.Load()
+	if errLoadingEnvFile != nil {
+		log.Fatal(errLoadingEnvFile)
+	}
+
+}
 func main() {
 	defer func() {
 		if err := recover(); err != nil {
@@ -28,7 +36,7 @@ func main() {
 	route.GET("/user/all", controller.GetAllUsers)
 	route.GET("/user/:id", controller.GetUser)
 	route.POST("/user", controller.CreateUser)
-	route.POST("/user/update/:id", controller.UpdateUser)
+	route.PUT("/user/update/:id", controller.UpdateUser)
 	route.DELETE("/user/:id", controller.DeleteUser)
 
 	routing.HTTPErrorHandler = middlewares.RouteHandler

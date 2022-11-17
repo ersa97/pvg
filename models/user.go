@@ -3,28 +3,29 @@ package models
 import (
 	"errors"
 	"pvg/databases"
+	"time"
 )
 
 type UserCreate struct {
-	Id        string `json:"id" gorm:"id"`
-	Username  string `json:"username" validate:"required" gorm:"username"`
-	Firstname string `json:"firstname" validate:"required" gorm:"firstname"`
-	Lastname  string `json:"lastname"  validate:"required" gorm:"lastname"`
-	Password  string `json:"password"  validate:"required,eqfield=Pin" gorm:"password"`
-	Phone     string `json:"phone" validate:"required" gorm:"phone"`
-	Email     string `json:"email" validate:"required" gorm:"email"`
-	Birthday  string `json:"birthday" validate:"required" gorm:"birthday"`
+	Id        string    `json:"id" gorm:"id"`
+	Username  string    `json:"username" validate:"required" gorm:"username"`
+	Firstname string    `json:"firstname" validate:"required" gorm:"firstname"`
+	Lastname  string    `json:"lastname"  validate:"required" gorm:"lastname"`
+	Password  string    `json:"password"  validate:"required" gorm:"password"`
+	Phone     string    `json:"phone" validate:"required" gorm:"phone"`
+	Email     string    `json:"email" validate:"required" gorm:"email"`
+	Birthday  time.Time `json:"birthday" validate:"required" gorm:"birthday"`
 }
 
 type User struct {
-	Id        string `json:"id" gorm:"id"`
-	Username  string `json:"username" gorm:"username"`
-	Firstname string `json:"firstname" gorm:"firstname"`
-	Lastname  string `json:"lastname"  gorm:"lastname"`
-	Password  string `json:"password" gorm:"password"`
-	Phone     string `json:"phone" gorm:"phone"`
-	Email     string `json:"email" gorm:"email"`
-	Birthday  string `json:"birthday" gorm:"birthday"`
+	Id        string    `json:"id" gorm:"id"`
+	Username  string    `json:"username" gorm:"username"`
+	Firstname string    `json:"firstname" gorm:"firstname"`
+	Lastname  string    `json:"lastname"  gorm:"lastname"`
+	Password  string    `json:"password" gorm:"password"`
+	Phone     string    `json:"phone" gorm:"phone"`
+	Email     string    `json:"email" gorm:"email"`
+	Birthday  time.Time `json:"birthday" gorm:"birthday"`
 }
 
 func (User) TableName() string {
@@ -40,7 +41,7 @@ func (t *User) GetAllUser() (out *[]User, err error) {
 	DB := databases.Connect()
 
 	tx := DB.Table(t.TableName())
-	tx.Find(&out, "id", t.Id)
+	tx.Find(&out)
 
 	if tx.RowsAffected == 0 {
 		return nil, errors.New("data not found")
@@ -72,15 +73,7 @@ func (t *UserCreate) isUserExist() bool {
 	DB := databases.Connect()
 	var user User
 	tx := DB.Table(t.TableName())
-	tx.First(&user, "username", t.Username)
-	if tx.RowsAffected >= 1 {
-		return true
-	}
-	tx.First(&user, "email", t.Email)
-	if tx.RowsAffected >= 1 {
-		return true
-	}
-	tx.First(&user, "phone", t.Phone)
+	tx.First(&user, "username = ? or email = ? or phone = ?", t.Username, t.Email, t.Phone)
 	if tx.RowsAffected >= 1 {
 		return true
 	} else {
@@ -93,15 +86,7 @@ func (t *User) isUpdateUserExist() bool {
 	DB := databases.Connect()
 	var user User
 	tx := DB.Table(t.TableName())
-	tx.First(&user, "username", t.Username)
-	if tx.RowsAffected >= 1 {
-		return true
-	}
-	tx.First(&user, "email", t.Email)
-	if tx.RowsAffected >= 1 {
-		return true
-	}
-	tx.First(&user, "phone", t.Phone)
+	tx.First(&user, "username = ? or email = ? or phone = ?", t.Username, t.Email, t.Phone)
 	if tx.RowsAffected >= 1 {
 		return true
 	} else {
@@ -112,7 +97,7 @@ func (t *User) isUpdateUserExist() bool {
 func (t *UserCreate) CreateUser() (out *UserCreate, err error) {
 
 	isExist := t.isUserExist()
-	if !isExist {
+	if isExist {
 		return nil, errors.New("user already exist")
 	}
 
@@ -146,12 +131,12 @@ func (t *UserCreate) CreateUser() (out *UserCreate, err error) {
 func (t *User) UpdateUser() (out *User, err error) {
 
 	isExist := t.isUpdateUserExist()
-	if !isExist {
+	if isExist {
 		return nil, errors.New("user already exist")
 	}
 	DB := databases.Connect()
 
-	tx := DB.Table(t.TableName()).Updates(&User{
+	tx := DB.Table(t.TableName()).Where("id = ?", t.Id).Updates(&User{
 		Username:  t.Username,
 		Firstname: t.Firstname,
 		Lastname:  t.Lastname,

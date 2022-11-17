@@ -16,6 +16,8 @@ func Connect() *gorm.DB {
 		os.Getenv("MYSQL_HOST"),
 		os.Getenv("MYSQL_DBNAME"))
 
+	fmt.Println(dsn)
+
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("Error DB")

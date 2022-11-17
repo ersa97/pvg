@@ -40,11 +40,11 @@ func (ct *Controller) CreateUser(ctx echo.Context) (err error) {
 	user := new(models.UserCreate)
 	if err = ctx.Bind(user); err != nil {
 		helpers.LoggerError(err)
-		return models.ResponseContext(http.StatusBadRequest, err.Error(), nil, ctx)
+		return models.ResponseContext(http.StatusBadRequest, "error binding body", err.Error(), ctx)
 	}
 	if err = ctx.Validate(user); err != nil {
 		helpers.LoggerError(err)
-		return models.ResponseContext(http.StatusBadRequest, err.Error(), nil, ctx)
+		return models.ResponseContext(http.StatusBadRequest, "invalid validation", err.Error(), ctx)
 	}
 
 	service := services.NewServiceUser()
@@ -64,7 +64,7 @@ func (ct *Controller) UpdateUser(ctx echo.Context) (err error) {
 
 	if err = ctx.Bind(user); err != nil {
 		helpers.LoggerError(err)
-		return models.ResponseContext(http.StatusBadRequest, err.Error(), nil, ctx)
+		return models.ResponseContext(http.StatusBadRequest, "error binding body", err.Error(), ctx)
 	}
 
 	service := services.NewServiceUser()
