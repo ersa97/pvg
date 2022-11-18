@@ -14,5 +14,3 @@ MYSQL_DBNAME=pvg
 SENDER_EMAIL=
 SENDER_NAME=
 SENDGRID_APIKEY = 
-
-note : the feature for sending email still has bug, the email cannot be sent because my sendgrid account still waiting for reviews. Hence, I haven't able to create the full process of the registration and forgot password API

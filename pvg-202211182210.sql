@@ -31,8 +31,9 @@ CREATE TABLE `users` (
   `phone` varchar(100) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Birthday` timestamp NOT NULL,
+  `email_confirmed` tinyint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +42,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (9,'ersa','ersa','arkhab','$2a$10$Z/OI7Haa1P/GgSynRKUvEe1RRhQGkRJIbkHbCZBWi6PjimReImQO2','081122334455','ersa123@gmail.com','1997-11-13 15:04:05'),(10,'ersa123','ersa','arkhab','$2a$10$tp7NrQd6WV0TELpbiQEjnedVnRsQN9rQWglHx8x349ET/1PSC8wLG','081122334455','ersa123@gmail.com','1997-11-13 15:04:05'),(11,'raven','ersa','raven','$2a$10$MHQApZi1JBQHD9G/HsrnweI3ZKSJ0vQ.1tWMRJzfSeCj3eqyC6JEm','081122334456','raven.ersa@gmail.com','1997-11-13 15:04:05'),(12,'raven1','ersa','raven','$2a$10$7xn8U0f6HXmInlk1PnOdjutN45fo1UfKtycAtuCrLc5HyUZCeV.pq','081122334457','ravenersa97@gmail.com','1997-11-13 15:04:05'),(13,'raven12','ersa','raven','$2a$10$w4nZ3xNvLVqCC3Yvs/0.z.K42KEEyq9P6Zv2heBTx3LE/7itRoeem','081122334454','raven.ersa97@gmail.com','1997-11-13 15:04:05'),(31,'safrizal99','safrizal','99','$2a$10$2bg6e/2vne.heHT7ajFy5OEHbvlggHw36Z1gMWHCD/VjL07glIVzK','081188112233','safrizal99@gmail.com','2003-06-06 15:04:05');
+INSERT INTO `users` VALUES (9,'ersa','ersa','arkhab','$2a$10$Z/OI7Haa1P/GgSynRKUvEe1RRhQGkRJIbkHbCZBWi6PjimReImQO2','081122334455','ersa123@gmail.com','1997-11-13 15:04:05',1),(10,'ersa123','ersa','arkhab','$2a$10$tp7NrQd6WV0TELpbiQEjnedVnRsQN9rQWglHx8x349ET/1PSC8wLG','081122334455','ersa123@gmail.com','1997-11-13 15:04:05',1),(11,'raven','ersa','raven','$2a$10$MHQApZi1JBQHD9G/HsrnweI3ZKSJ0vQ.1tWMRJzfSeCj3eqyC6JEm','081122334456','raven.ersa@gmail.com','1997-11-13 15:04:05',1),(12,'raven1','ersa','raven','$2a$10$7xn8U0f6HXmInlk1PnOdjutN45fo1UfKtycAtuCrLc5HyUZCeV.pq','081122334457','ravenersa97@gmail.com','1997-11-13 15:04:05',1),(13,'raven12','ersa','raven','$2a$10$w4nZ3xNvLVqCC3Yvs/0.z.K42KEEyq9P6Zv2heBTx3LE/7itRoeem','081122334454','raven.ersa97@gmail.com','1997-11-13 15:04:05',1),(31,'safrizal99','safrizal','99','$2a$10$2bg6e/2vne.heHT7ajFy5OEHbvlggHw36Z1gMWHCD/VjL07glIVzK','081188112233','safrizal99@gmail.com','2003-06-06 15:04:05',1),(33,'mustikadk','mustika','dewi kurnianigtyas','$2a$10$Ucvnn07..1k6vNB.i/Sj0uZDBeHpHvW1dJ77BZn5sPx/nXuDc3IL.','081188112244','mustikadk1999@gmail.com','1999-05-21 15:04:05',1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-18 15:38:14
+-- Dump completed on 2022-11-18 22:10:17
