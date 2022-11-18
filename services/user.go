@@ -2,9 +2,12 @@ package services
 
 import (
 	"errors"
+	"math/rand"
 	"net/http"
+	"pvg/helpers"
 	"pvg/models"
 	"pvg/repository"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -77,6 +80,14 @@ func (u *UserService) CreateUser(ctx echo.Context, request *models.UserCreate) (
 			Data:    nil,
 		}, errors.New(err.Error())
 	}
+
+	rand.Seed(time.Now().UnixNano())
+	key := helpers.RandSeq(4)
+
+	go func() {
+		helpers.SendEmail("registration verification", request.Email, request.Username, key)
+	}()
+
 	return &models.Responses{
 		Code:    http.StatusOK,
 		Message: "data found",
