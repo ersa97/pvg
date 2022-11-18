@@ -5,4 +5,14 @@
 3. please test the program using this postman documentation
 https://documenter.getpostman.com/view/19188285/2s8YmPui1m
 
+4. please create a .env file contains your existing sendgrid credentials 
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_HOST=localhost
+MYSQL_DBNAME=pvg
+
+SENDER_EMAIL=
+SENDER_NAME=
+SENDGRID_APIKEY = 
+
 note : the feature for sending email still has bug, the email cannot be sent because my sendgrid account still waiting for reviews. Hence, I haven't able to create the full process of the registration and forgot password API
