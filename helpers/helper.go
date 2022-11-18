@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"encoding/base64"
 	"fmt"
 	"log"
 	"math/rand"
@@ -27,4 +28,12 @@ func LoggerError(err error) {
 		log.Println(colorRed, "ERROR => "+err.Error()+".")
 		log.Println(colorRed, "========== End Of Error Message ==========")
 	}
+}
+
+func CreateKey(email, emailkey string) (key string) {
+
+	data := email + "|" + emailkey
+	key = base64.StdEncoding.EncodeToString([]byte(data))
+
+	return
 }

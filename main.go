@@ -39,6 +39,11 @@ func main() {
 	route.PUT("/user/update/:id", controller.UpdateUser)
 	route.DELETE("/user/:id", controller.DeleteUser)
 
+	route.POST("/email/confirm", controller.EmailConfirm)
+
+	route.POST("/initial/forgotpass", controller.ForgotInitial)
+	route.POST("/forgotpass/validation", controller.ForgotValidation)
+
 	routing.HTTPErrorHandler = middlewares.RouteHandler
 	routing.Logger.Fatal(routing.Start(":8000"))
 }

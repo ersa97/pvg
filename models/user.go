@@ -6,26 +6,33 @@ import (
 	"time"
 )
 
+type ConfirmEmail struct {
+	EmailKey string `json:"email_key" validate:"required"`
+	Key      string `json:"key" validate:"required"`
+}
+
 type UserCreate struct {
-	Id        string    `json:"id" gorm:"id"`
-	Username  string    `json:"username" validate:"required" gorm:"username"`
-	Firstname string    `json:"firstname" validate:"required" gorm:"firstname"`
-	Lastname  string    `json:"lastname"  validate:"required" gorm:"lastname"`
-	Password  string    `json:"password"  validate:"required" gorm:"password"`
-	Phone     string    `json:"phone" validate:"required" gorm:"phone"`
-	Email     string    `json:"email" validate:"required" gorm:"email"`
-	Birthday  time.Time `json:"birthday" validate:"required" gorm:"birthday"`
+	Id             string    `json:"id" gorm:"id"`
+	Username       string    `json:"username" validate:"required" gorm:"username"`
+	Firstname      string    `json:"firstname" validate:"required" gorm:"firstname"`
+	Lastname       string    `json:"lastname"  validate:"required" gorm:"lastname"`
+	Password       string    `json:"password"  validate:"required" gorm:"password"`
+	Phone          string    `json:"phone" validate:"required" gorm:"phone"`
+	Email          string    `json:"email" validate:"required" gorm:"email"`
+	Birthday       time.Time `json:"birthday" validate:"required" gorm:"birthday"`
+	EmailConfirmed int       `json:"email_confirmed" gorm:"email_confirmed"`
 }
 
 type User struct {
-	Id        string    `json:"id" gorm:"id"`
-	Username  string    `json:"username" gorm:"username"`
-	Firstname string    `json:"firstname" gorm:"firstname"`
-	Lastname  string    `json:"lastname"  gorm:"lastname"`
-	Password  string    `json:"password" gorm:"password"`
-	Phone     string    `json:"phone" gorm:"phone"`
-	Email     string    `json:"email" gorm:"email"`
-	Birthday  time.Time `json:"birthday" gorm:"birthday"`
+	Id             string    `json:"id" gorm:"id"`
+	Username       string    `json:"username" gorm:"username"`
+	Firstname      string    `json:"firstname" gorm:"firstname"`
+	Lastname       string    `json:"lastname"  gorm:"lastname"`
+	Password       string    `json:"password" gorm:"password"`
+	Phone          string    `json:"phone" gorm:"phone"`
+	Email          string    `json:"email" gorm:"email"`
+	Birthday       time.Time `json:"birthday" gorm:"birthday"`
+	EmailConfirmed int       `json:"email_confirmed" gorm:"email_confirmed"`
 }
 
 func (User) TableName() string {
@@ -112,13 +119,14 @@ func (t *UserCreate) CreateUser() (out *UserCreate, err error) {
 	DB := databases.Connect()
 
 	tx := DB.Table(t.TableName()).Create(&UserCreate{
-		Username:  t.Username,
-		Firstname: t.Firstname,
-		Lastname:  t.Lastname,
-		Password:  t.Password,
-		Phone:     t.Phone,
-		Email:     t.Email,
-		Birthday:  t.Birthday,
+		Username:       t.Username,
+		Firstname:      t.Firstname,
+		Lastname:       t.Lastname,
+		Password:       t.Password,
+		Phone:          t.Phone,
+		Email:          t.Email,
+		Birthday:       t.Birthday,
+		EmailConfirmed: 0,
 	}).Last(&out)
 
 	if tx.Error != nil {
@@ -137,17 +145,48 @@ func (t *User) UpdateUser() (out *User, err error) {
 	DB := databases.Connect()
 
 	tx := DB.Table(t.TableName()).Where("id = ?", t.Id).Updates(&User{
-		Username:  t.Username,
-		Firstname: t.Firstname,
-		Lastname:  t.Lastname,
-		Password:  t.Password,
-		Phone:     t.Phone,
-		Email:     t.Email,
-		Birthday:  t.Birthday,
+		Username:       t.Username,
+		Firstname:      t.Firstname,
+		Lastname:       t.Lastname,
+		Password:       t.Password,
+		Phone:          t.Phone,
+		Email:          t.Email,
+		Birthday:       t.Birthday,
+		EmailConfirmed: t.EmailConfirmed,
 	}).Last(&out)
 
 	if tx.Error != nil {
 		return nil, errors.New("data not found")
+	}
+
+	return
+}
+
+func (t *User) ConfirmEmail() (err error) {
+
+	DB := databases.Connect()
+
+	tx := DB.Table(t.TableName()).Where("email = ?", t.Email).Updates(&User{
+		EmailConfirmed: t.EmailConfirmed,
+	})
+
+	if tx.Error != nil {
+		return errors.New("data not found")
+	}
+
+	return
+}
+
+func (t *User) EditPassword() (err error) {
+
+	DB := databases.Connect()
+
+	tx := DB.Debug().Table(t.TableName()).Where("email = ?", t.Email).Updates(&User{
+		Password: t.Password,
+	})
+
+	if tx.Error != nil {
+		return errors.New("data not found")
 	}
 
 	return
